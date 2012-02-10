@@ -5,11 +5,15 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Moving Gems from one version of Ruby Enterprise Edition to Another - Steve Eichert</title>
+  <title>Test - Steve Eichert</title>
   <meta name="author" content="Steve Eichert">
 
   
-  <meta name="description" content="As mentioned in my previous post I recently built a small internal micro app with merb. As part of the process of deploying that app I needed/wanted &hellip;">
+  <meta name="description" content="1
+2
+3
+def hello? return &quot;Hi!&quot;
+end ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +22,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://steveeichert.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another.html">
+  <link rel="canonical" href="http://steveeichert.com/blog/2012/02/09/test">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -67,7 +71,7 @@
   
   <header>
     
-      <h1 class="entry-title">Moving Gems From One Version of Ruby Enterprise Edition to Another</h1>
+      <h1 class="entry-title">Test</h1>
     
     
       <p class="meta">
@@ -83,16 +87,20 @@
   
 
 
-<time datetime="2008-12-28T00:00:00-05:00" pubdate data-updated="true">Dec 28<span>th</span>, 2008</time>
+<time datetime="2012-02-09T21:49:00-05:00" pubdate data-updated="true">Feb 9<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>As mentioned in my previous post I recently built a small internal micro app with merb.  As part of the process of deploying that app I needed/wanted to update to the latest version of Ruby Enterprise Edition (REE) and Passenger on my slice.  One of the issues I ran into while trying to update the REE version is that all my old gems where not installed in my fresh new version of REE.  There may be a better way to accomplish this task, but the approach I ended up using was to modify this capistrano file (<a href="http://github.com/jtimberman/ree-capfile/tree/master">http://github.com/jtimberman/ree-capfile/tree/master</a>) to install the gems in the old version of REE in the new version.</p>
-
-<script src="http://gist.github.com/39066.js"></script>
+<div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">hello?</span>
+</span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;Hi!&quot;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
 
 </div>
 
@@ -116,7 +124,7 @@
   
 
 
-<time datetime="2008-12-28T00:00:00-05:00" pubdate data-updated="true">Dec 28<span>th</span>, 2008</time>
+<time datetime="2012-02-09T21:49:00-05:00" pubdate data-updated="true">Feb 9<span>th</span>, 2012</time>
       
 
 
@@ -124,7 +132,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://steveeichert.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another.html" data-via="steveeichert" data-counturl="http://steveeichert.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another.html" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://steveeichert.com/blog/2012/02/09/test/" data-via="steveeichert" data-counturl="http://steveeichert.com/blog/2012/02/09/test/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -137,12 +145,18 @@
     
     <p class="meta">
       
+        <a class="basic-alignment left" href="/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing.html" title="Previous Post: Using Hadoop Streaming for XML processing">&laquo; Using Hadoop Streaming for XML processing</a>
       
-        <a class="basic-alignment right" href="/2009/01/30/network-visualization-on-the-web.html" title="next Post: Network Visualization on the Web">Network Visualization on the Web &raquo;</a>
       
     </p>
   </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -214,7 +228,10 @@
       var disqus_shortname = 'steveeichert';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://steveeichert.com/blog/2012/02/09/test/';
+        var disqus_url = 'http://steveeichert.com/blog/2012/02/09/test/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

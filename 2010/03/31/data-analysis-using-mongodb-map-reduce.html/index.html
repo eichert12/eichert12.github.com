@@ -90,75 +90,95 @@
   </header>
 
 
-<div class="entry-content"><p>Over the course of the last couple weeks we&#8217;ve been developing a system to help analyze the 19+ million documents in the pubmed database.  In my <a href="/2010/03/18/large-scale-data-processing-with-mongodb.html">previous post</a> I shared details about the process that we&#8217;ve been using to bring down the ~617 zipped <span class="caps">XML</span> documents that contain the articles and import them into MongoDB.  Today I&#8217;m going to share a few more details about our attempts at analyzing the pubmed database using the Map/Reduce capabilities MongoDB offers.</p>
-<p>After completing the download, unzip, parse, and load steps required to get the pubmed articles into our MongoDB instance we set out to use the map/reduce capabilities in MongoDB to do analysis and aggregation.  Our initial work has focused on the keywords and <span class="caps">MESH</span> headings within pubmed articles, as well as on the relationships between authors within pubmed.  Our end goal is to have a profile for every author who has published an article in pubmed with details about what keywords and <span class="caps">MESH</span> headings appear most within the articles they publish, as well as who they commonly co-author articles with.</p>
+<div class="entry-content"><p>Over the course of the last couple weeks we&#8217;ve been developing a system to help analyze the 19+ million documents in the pubmed database.  In my &#8220;previous post&#8221;:/2010/03/18/large-scale-data-processing-with-mongodb.html I shared details about the process that we&#8217;ve been using to bring down the ~617 zipped XML documents that contain the articles and import them into MongoDB.  Today I&#8217;m going to share a few more details about our attempts at analyzing the pubmed database using the Map/Reduce capabilities MongoDB offers.</p>
+
+<p>After completing the download, unzip, parse, and load steps required to get the pubmed articles into our MongoDB instance we set out to use the map/reduce capabilities in MongoDB to do analysis and aggregation.  Our initial work has focused on the keywords and MESH headings within pubmed articles, as well as on the relationships between authors within pubmed.  Our end goal is to have a profile for every author who has published an article in pubmed with details about what keywords and MESH headings appear most within the articles they publish, as well as who they commonly co-author articles with.</p>
+
 <p>In order to build this profile we set out to write a map/reduce job to count the number of articles written by each author by keyword.  Our job writes the results of the map/reduce job to a named collection.</p>
-<div class='bogus-wrapper'><figure class='code'><figcaption><span><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span><br />
-<span class='line-number'>2</span><br />
-<span class='line-number'>3</span><br />
-<span class='line-number'>4</span><br />
-<span class='line-number'>5</span><br />
-<span class='line-number'>6</span><br />
-<span class='line-number'>7</span><br />
-<span class='line-number'>8</span><br />
-<span class='line-number'>9</span><br />
-<span class='line-number'>10</span><br />
-</pre></td><td class='code'><pre><code class='ruby'>&lt;span class='line'&gt;&lt;span class="n"&gt;connection&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;new&lt;/span&gt; &lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;mongodb&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;][&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;host&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;&lt;span class="n"&gt;db&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;config&lt;/span&gt;&lt;span class="o"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;mongodb&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;][&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;db&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;&lt;span class="n"&gt;collection&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;db&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;collection&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;articles&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;
-&lt;/span&gt;&lt;span class='line'&gt;&lt;span class="n"&gt;map&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;.&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;&lt;span class="n"&gt;reduce&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;.&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;
-&lt;/span&gt;&lt;span class='line'&gt;&lt;span class="n"&gt;result&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;collection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;map_reduce&lt;/span&gt; &lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;reduce&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;                               &lt;span class="ss"&gt;:verbose&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="kp"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;                               &lt;span class="ss"&gt;:out&lt;/span&gt; &lt;span class="o"&gt;=&amp;gt;&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;keywordstats&amp;quot;&lt;/span&gt;
-&lt;/span&gt;</code></pre></td><p></tr></table></div></figure></notextile></div></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">connection</span> <span class="o">=</span> <span class="no">Connection</span><span class="o">.</span><span class="n">new</span> <span class="n">config</span><span class="o">[</span><span class="s2">&quot;mongodb&quot;</span><span class="o">][</span><span class="s2">&quot;host&quot;</span><span class="o">]</span>
+</span><span class='line'><span class="n">db</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="n">config</span><span class="o">[</span><span class="s2">&quot;mongodb&quot;</span><span class="o">][</span><span class="s2">&quot;db&quot;</span><span class="o">]</span><span class="p">)</span>
+</span><span class='line'><span class="n">collection</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">collection</span><span class="p">(</span><span class="s2">&quot;articles&quot;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">map</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'><span class="n">reduce</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">result</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">map_reduce</span> <span class="n">map</span><span class="p">,</span> <span class="n">reduce</span><span class="p">,</span>
+</span><span class='line'>                               <span class="ss">:verbose</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
+</span><span class='line'>                               <span class="ss">:out</span> <span class="o">=&gt;</span> <span class="s2">&quot;keywordstats&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <p>The &#8220;keywordstats&#8221; map/reduce job resulted in over a half million documents being inserted into the keywordstats collection.</p>
-<div class='bogus-wrapper'><figure class='code'><figcaption><span><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span><br />
-<span class='line-number'>2</span><br />
-<span class='line-number'>3</span><br />
-<span class='line-number'>4</span><br />
-<span class='line-number'>5</span><br />
-<span class='line-number'>6</span><br />
-<span class='line-number'>7</span><br />
-<span class='line-number'>8</span><br />
-<span class='line-number'>9</span><br />
-</pre></td><td class='code'><pre><code class='ruby'>&lt;span class='line'&gt;&lt;span class="c1"&gt;#keywordstatus example document&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;&lt;span class="p"&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;  &lt;span class="n"&gt;_id&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;author_name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;  &lt;span class="n"&gt;keywords&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;    &lt;span class="n"&gt;keyword1&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;310&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;    &lt;span class="n"&gt;keyword2&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;21&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;    &lt;span class="n"&gt;keyword3&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;22&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;  &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/span&gt;&lt;span class='line'&gt;&lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/span&gt;</code></pre></td><p></tr></table></div></figure></notextile></div></p>
-<p>The running of the keyword map/reduce analysis took approximately 30 minutes and didn&#8217;t cause us to think twice about our use of MongoDB map/reduce for our analysis.  Next we moved onto doing analysis on <span class="caps">MESH</span> headings.  Since <span class="caps">MESH</span> headings are pubmed&#8217;s official way of categorizing articles there are a lot more articles with <span class="caps">MESH</span> headings, and thus a lot more crunching for MongoDB to do.  The map/reduce jobs for the <span class="caps">MESH</span> headings were almost exactly the same as those for keywords, however, the processing took much longer due to the larger number of articles with <span class="caps">MESH</span> headings assigned.  When all was said and done MongoDB was able to process our map/reduce jobs for <span class="caps">MESH</span> headings, however, it took over 15 hours to complete (Note: we didn&#8217;t do any optimization work so its likely this could be trimmed).</p>
-<p>The large increase in time required to analyze the <span class="caps">MESH</span> headings made us start to think about what other options we might consider.  However, we pressed onto our final analysis: author/co-author relationships.  Our goal with the author/co-author analysis is to be able to see who authors are co-authoring with most.  Additionally, we want to be able to create a network graph of all the authors within pubmed to do social network analysis on the graph.  In order to create the network we need to be able to figure out who has written with one another so we can create an edge between the relevant author nodes.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="c1">#keywordstatus example document</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">_id</span><span class="p">:</span> <span class="n">author_name</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">keywords</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">keyword1</span><span class="p">:</span> <span class="mi">310</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">keyword2</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">keyword3</span><span class="p">:</span> <span class="mi">22</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The running of the keyword map/reduce analysis took approximately 30 minutes and didn&#8217;t cause us to think twice about our use of MongoDB map/reduce for our analysis.  Next we moved onto doing analysis on MESH headings.  Since MESH headings are pubmed&#8217;s official way of categorizing articles there are a lot more articles with MESH headings, and thus a lot more crunching for MongoDB to do.  The map/reduce jobs for the MESH headings were almost exactly the same as those for keywords, however, the processing took much longer due to the larger number of articles with MESH headings assigned.  When all was said and done MongoDB was able to process our map/reduce jobs for MESH headings, however, it took over 15 hours to complete (Note: we didn&#8217;t do any optimization work so its likely this could be trimmed).</p>
+
+<p>The large increase in time required to analyze the MESH headings made us start to think about what other options we might consider.  However, we pressed onto our final analysis: author/co-author relationships.  Our goal with the author/co-author analysis is to be able to see who authors are co-authoring with most.  Additionally, we want to be able to create a network graph of all the authors within pubmed to do social network analysis on the graph.  In order to create the network we need to be able to figure out who has written with one another so we can create an edge between the relevant author nodes.</p>
+
 <p>Since every article within pubmed has an author, and often multiple authors, we expected this bit of analysis  to be the most taxing on MongoDB.  Pretty soon after kicking off our author/co-author jobs we ran into problems.  Due to the large number of author/co-author relationships and the fact that a single author may co-author papers with many other authors we were unable to get our job to run without running into the memory size limitations of documents within MongoDB.</p>
+
 <p>We evaluated other map/reduce strategies that would reduce the document size, however, the limitations that MongoDB places on the mappers and reducers prevented us from implementing those alternate strategies.  To be more specific, MongoDB requires the mapper and reducer to emit the same structure.  From the map phase we were emitting:</p>
+
 <div>
-<pre>
-<code class='ruby'>author, {coauthor1: 1} #emit for each author/co-author &amp;quot;pair&amp;quot;</code>
-</pre>
+  <pre>
+    <code class='ruby'>author, {coauthor1: 1} #emit for each author/co-author &quot;pair&quot;</code>
+  </pre>
 </div>
+
+
 <p>And in our reduce phase we were consolidating all the co-author counts into a single hash to end up with:</p>
+
 <div>
-<pre>
-<code class='ruby'>{
-<em>id: author</em>name,
-value: {
-coauthor1: 31,
-coauthor2: 211,
-coauthor3_: 122
-}
-<p>}</code><br />
-  </pre></p>
+  <pre>
+    <code class='ruby'>{ 
+  _id: author_name, 
+  value: { 
+    coauthor1: 31, 
+    coauthor2: 211, 
+    coauthor3_: 122
+  }
+}</code>
+  </pre>
 </div>
+
+
 <p>We found that some authors had so many papers and thus so many coauthors that we were blowing past the size limitations MongoDB places on documents. An alternate strategy that we considered was changing our reduce stage to output a single author coauthor relationship with a count rather then our initial approach which reduced to an author with a hash containing all the coauthors with the counts.  However, since we can only reduce to a single output we would need to change our mapper to emit the author/co-author as the key.  Our initial attempts with this approach weren&#8217;t working well which prompted us to taken another step back to consider alternate approaches.</p>
+
 <p>Given our needs and the amount of custom analysis we want to do against this (and other largish datasets) we decided to spend some time investigating Hadoop and Amazon Elastic Map Reduce.  Our initial experiences have been very positive, and have us feeling much more confident that the technology choice (Hadoop) won&#8217;t prevent us from exploring different types of analysis.</p>
-<p>We still feel that Mongo will be a great place to persist the output of all of our Map/Reduce steps, however, we don&#8217;t feel that it&#8217;s well suited to the type of analysis that we want to do.  With Hadoop we can scale our processing quite easily, we have tremendous flexibility in what we do in both the map and reduce stages, and most importantly to us we&#8217;re using a tool that is designed specifically for the problem we&#8217;re trying to &#8220;solve&#8221;.  Mongo is a nice schema free document database with some map/reduce capabilities, however, what we need for our analysis stage is a complete map/reduce framework.  We&#8217;ll still be using Mongo, we&#8217;ll just be using it for what it&#8217;s good at and Hadoop for the rest.</p></div>
+
+<p>We still feel that Mongo will be a great place to persist the output of all of our Map/Reduce steps, however, we don&#8217;t feel that it&#8217;s well suited to the type of analysis that we want to do.  With Hadoop we can scale our processing quite easily, we have tremendous flexibility in what we do in both the map and reduce stages, and most importantly to us we&#8217;re using a tool that is designed specifically for the problem we&#8217;re trying to &#8220;solve&#8221;.  Mongo is a nice schema free document database with some map/reduce capabilities, however, what we need for our analysis stage is a complete map/reduce framework.  We&#8217;ll still be using Mongo, we&#8217;ll just be using it for what it&#8217;s good at and Hadoop for the rest.</p>
+</div>
 
 
   <footer>
@@ -219,6 +239,10 @@ coauthor3_: 122
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2012/02/09/test/">Test</a>
+      </li>
+    
+      <li class="post">
         <a href="/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing.html">Using Hadoop Streaming for XML processing</a>
       </li>
     
@@ -232,10 +256,6 @@ coauthor3_: 122
     
       <li class="post">
         <a href="/2009/01/30/network-visualization-on-the-web.html">Network Visualization on the Web</a>
-      </li>
-    
-      <li class="post">
-        <a href="/2008/12/28/moving-gems-from-one-version-of-ree-to-another.html">Moving Gems from one version of Ruby Enterprise Edition to Another</a>
       </li>
     
   </ul>

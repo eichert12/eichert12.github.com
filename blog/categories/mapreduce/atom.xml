@@ -4,7 +4,7 @@
   <title><![CDATA[Category: mapreduce | Steve Eichert]]></title>
   <link href="http://steveeichert.com/blog/categories/mapreduce/atom.xml" rel="self"/>
   <link href="http://steveeichert.com/"/>
-  <updated>2012-02-09T21:40:16-05:00</updated>
+  <updated>2012-02-09T21:52:02-05:00</updated>
   <id>http://steveeichert.com/</id>
   <author>
     <name><![CDATA[Steve Eichert]]></name>
@@ -26,7 +26,7 @@
 
 <p>In hopes that I was being stupid with the StreamXmlReaderRecord I decided to return to it and attempt to get it working.  After configuring it I saw some positive things in the console as I ran my job.  It did in fact look like Hadoop was breaking apart my XML documents into the appropriate chunks (using the start and end tags I specified in my config)</p>
 
-<p><code>ruby
+<p><code>
 hadoop jar hadoop-0.20.2-streaming.jar
    -input medline10n0515.xml
    -output out
