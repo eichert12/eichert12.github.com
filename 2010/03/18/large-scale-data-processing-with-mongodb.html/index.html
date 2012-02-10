@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Large Scale Data Processing with MongoDB Map/Reduce (Part 1:Background) - Steve Eichert</title>
+  <meta name="author" content="Steve Eichert">
+
+  
+  <meta name="description" content="Over the course of the last week I&#8217;ve been working with a member of our team to develop a prototype data processing &#8220;engine&#8221; for &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://eichert12.github.com/2010/03/18/large-scale-data-processing-with-mongodb.html">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Steve Eichert" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Steve Eichert</a></h1>
+  
+    <h2>Hacker, Entreprenuer, Father</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:eichert12.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Large Scale Data Processing With MongoDB Map/Reduce (Part 1:Background)</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-18T00:00:00-04:00" pubdate data-updated="true">Mar 18<span>th</span>, 2010</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Over the course of the last week I&#8217;ve been working with a member of our team to develop a prototype data processing &#8220;engine&#8221; for analyzing articles within the <a href="http://www.ncbi.nlm.nih.gov/pubmed">pubmed database</a>.  The pubmed database consists of approximately 19 million articles that can be downloaded as approximately 617 zipped <span class="caps">XML</span> documents.</p>
+<p>Our initial work has focused on downloading the complete dataset, pulling out the bits that we have interest in, and importing them into MongoDB.  For our initial analysis we&#8217;re focusing on a subset of the details available for each article.  In the future we&#8217;ll likely expand our analysis to include more details.</p>
+<p>We started by downloading the 617 zipped <span class="caps">XML</span> documents from pubmed.  Once downloaded we unzipped each file, parsed out the bits that we&#8217;re interested in and saved the details in a <span class="caps">JSON</span> file optimized for importing into MongoDB. <sup class="footnote" id="fnr1"><a href="#fn1">1</a></sup></p>
+<p>Once all the <span class="caps">XML</span> files were processed and the details were saved out to a <span class="caps">JSON</span> file, we used the mongoimport utility to import the <span class="caps">JSON</span> files into MongoDB.</p>
+<p>The above process was run over the course of a couple days.  The most time consuming part was the parsing of the <span class="caps">XML</span> files.  We wrote <a href="http://github.com/defunkt/resque">Resque</a> workers to handle the above  so that the work could be distributed to multiple nodes running on EC2, however, I ended up running things locally so that I could test the process.  Given the pubmed database doesn&#8217;t change that often, and that we&#8217;ll rarely need to re-process the entire dataset having it run on a single machine over the course of a couple days will likely suffice.</p>
+<p>After importing all the articles into MongoDB we had a pretty large MongoDB database consisting of ~18 million &#8220;documents&#8221;.  With the articles loaded into MongoDB, we moved onto the next step&#8230;<a href="/2010/03/31/data-analysis-using-mongodb-map-reduce.html">analyzing all 18 million documents</a>.</p>
+<hr />
+<p><sup class="footnote" id="fnr1"><a href="#fn1">1</a></sup> MongoDB likes a single <span class="caps">JSON</span> record on each line.<br />
+<sup class="footnote" id="fnr2"><a href="#fn2">2</a></sup> This is my first blog post in ages, I need to get back into it slowly, oh so very slowly! :-)</p></div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Steve Eichert</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-18T00:00:00-04:00" pubdate data-updated="true">Mar 18<span>th</span>, 2010</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://eichert12.github.com/2010/03/18/large-scale-data-processing-with-mongodb.html" data-via="steveeichert" data-counturl="http://eichert12.github.com/2010/03/18/large-scale-data-processing-with-mongodb.html" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/2009/01/30/network-visualization-on-the-web.html" title="Previous Post: Network Visualization on the Web">&laquo; Network Visualization on the Web</a>
+      
+      
+        <a class="basic-alignment right" href="/2010/03/31/data-analysis-using-mongodb-map-reduce.html" title="next Post: Attempts at Analyzing 19 million documents using MongoDB map/reduce">Attempts at Analyzing 19 million documents using MongoDB map/reduce &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing.html">Using Hadoop Streaming for XML processing</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/03/31/data-analysis-using-mongodb-map-reduce.html">Attempts at Analyzing 19 million documents using MongoDB map/reduce</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2010/03/18/large-scale-data-processing-with-mongodb.html">Large Scale Data Processing with MongoDB Map/Reduce (Part 1:Background)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2009/01/30/network-visualization-on-the-web.html">Network Visualization on the Web</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2008/12/28/moving-gems-from-one-version-of-ree-to-another.html">Moving Gems from one version of Ruby Enterprise Edition to Another</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("steveeichert", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/steveeichert" class="twitter-follow-button" data-show-count="false">Follow @steveeichert</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Steve Eichert -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'steveeichert';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
