@@ -95,9 +95,9 @@
 
   <div class="entry-content"><p>In a few previous posts I talked about a project that we&#8217;re working on that involves analyzing a lot of XML documents from pubmed.  We&#8217;re currently not using Hadoop to parse the raw XML, however, due to the large number of documents in pubmed and the time it takes to do the parsing we&#8217;ve been discussing options that would allow us to scale up the processing to happen on multiple machines.  Since we&#8217;re already using Hadoop for analysis I decided to poke around a bit to see if we could figure out a way to use Hadoop for the parsing of the 617+ XML documents.</p>
 
-<p>After some digging I came across &#8220;this page&#8221;:http://hadoop.apache.org/common/docs/r0.15.2/streaming.html#How+do+I+parse+XML+documents+using+streaming%3F on the Hadoop Streaming page that said the following: &#8220;You can use the record reader StreamXmlRecordReader to process XML documents&#8230;.Anything found between BEGIN_STRING and END_STRING would be treated as one record for map tasks.&#8221;</p>
+<p>After some digging I came across <a href="http://hadoop.apache.org/common/docs/r0.15.2/streaming.html#How+do+I+parse+XML+documents+using+streaming%3F">this page</a> on the Hadoop Streaming page that said the following: &#8220;You can use the record reader StreamXmlRecordReader to process XML documents&#8230;.Anything found between BEGIN_STRING and END_STRING would be treated as one record for map tasks.&#8221;</p>
 
-<p>After a few tries I wasn&#8217;t having much success, so continued to look for alternate options.  I came across Paul Ingles post on &#8220;Processing XML with Hadoop&#8221;:http://oobaloo.co.uk/articles/2010/1/20/processing-xml-in-hadoop.html which pointed me to the &#8220;XmlInputFormat&#8221;:http://github.com/apache/mahout/blob/ad84344e4055b1e6adff5779339a33fa29e1265d/examples/src/main/java/org/apache/mahout/classifier/bayes/XmlInputFormat.java class in Mahout.  I believe in order to use the XlInputFormat class from Mahout I either need to recompile Hadoop with that class included or be using a jar file for my jobs that includes that class.  Since we&#8217;re writing our mappers and reducers in Ruby I didn&#8217;t have a jar to add the class to.</p>
+<p>After a few tries I wasn&#8217;t having much success, so continued to look for alternate options.  I came across Paul Ingles post on <a href="http://oobaloo.co.uk/articles/2010/1/20/processing-xml-in-hadoop.html">Processing XML with Hadoop</a> which pointed me to the <a href="http://github.com/apache/mahout/blob/ad84344e4055b1e6adff5779339a33fa29e1265d/examples/src/main/java/org/apache/mahout/classifier/bayes/XmlInputFormat.java">XmlInputFormat</a> class in Mahout.  I believe in order to use the XlInputFormat class from Mahout I either need to recompile Hadoop with that class included or be using a jar file for my jobs that includes that class.  Since we&#8217;re writing our mappers and reducers in Ruby I didn&#8217;t have a jar to add the class to.</p>
 
 <p>In hopes that I was being stupid with the StreamXmlReaderRecord I decided to return to it and attempt to get it working.  After configuring it I saw some positive things in the console as I ran my job.  It did in fact look like Hadoop was breaking apart my XML documents into the appropriate chunks (using the start and end tags I specified in my config)</p>
 
@@ -186,7 +186,7 @@
   </header>
 
 
-  <div class="entry-content"><p>Over the course of the last couple weeks we&#8217;ve been developing a system to help analyze the 19+ million documents in the pubmed database.  In my &#8220;previous post&#8221;:/2010/03/18/large-scale-data-processing-with-mongodb.html I shared details about the process that we&#8217;ve been using to bring down the ~617 zipped XML documents that contain the articles and import them into MongoDB.  Today I&#8217;m going to share a few more details about our attempts at analyzing the pubmed database using the Map/Reduce capabilities MongoDB offers.</p>
+  <div class="entry-content"><p>Over the course of the last couple weeks we&#8217;ve been developing a system to help analyze the 19+ million documents in the pubmed database.  In my <a href="/2010/03/18/large-scale-data-processing-with-mongodb.html">previous post</a> I shared details about the process that we&#8217;ve been using to bring down the ~617 zipped XML documents that contain the articles and import them into MongoDB.  Today I&#8217;m going to share a few more details about our attempts at analyzing the pubmed database using the Map/Reduce capabilities MongoDB offers.</p>
 
 <p>After completing the download, unzip, parse, and load steps required to get the pubmed articles into our MongoDB instance we set out to use the map/reduce capabilities in MongoDB to do analysis and aggregation.  Our initial work has focused on the keywords and MESH headings within pubmed articles, as well as on the relationships between authors within pubmed.  Our end goal is to have a profile for every author who has published an article in pubmed with details about what keywords and MESH headings appear most within the articles they publish, as well as who they commonly co-author articles with.</p>
 
@@ -312,7 +312,7 @@
   </header>
 
 
-  <div class="entry-content"><p>Over the course of the last week I&#8217;ve been working with a member of our team to develop a prototype data processing &#8220;engine&#8221; for analyzing articles within the &#8220;pubmed database&#8221;:http://www.ncbi.nlm.nih.gov/pubmed.  The pubmed database consists of approximately 19 million articles that can be downloaded as approximately 617 zipped XML documents.</p>
+  <div class="entry-content"><p>Over the course of the last week I&#8217;ve been working with a member of our team to develop a prototype data processing &#8220;engine&#8221; for analyzing articles within the <a href="http://www.ncbi.nlm.nih.gov/pubmed">pubmed database</a>.  The pubmed database consists of approximately 19 million articles that can be downloaded as approximately 617 zipped XML documents.</p>
 
 <p>Our initial work has focused on downloading the complete dataset, pulling out the bits that we have interest in, and importing them into MongoDB.  For our initial analysis we&#8217;re focusing on a subset of the details available for each article.  In the future we&#8217;ll likely expand our analysis to include more details.</p>
 
@@ -320,9 +320,9 @@
 
 <p>Once all the XML files were processed and the details were saved out to a JSON file, we used the mongoimport utility to import the JSON files into MongoDB.</p>
 
-<p>The above process was run over the course of a couple days.  The most time consuming part was the parsing of the XML files.  We wrote &#8220;Resque&#8221;:http://github.com/defunkt/resque workers to handle the above  so that the work could be distributed to multiple nodes running on EC2, however, I ended up running things locally so that I could test the process.  Given the pubmed database doesn&#8217;t change that often, and that we&#8217;ll rarely need to re-process the entire dataset having it run on a single machine over the course of a couple days will likely suffice.</p>
+<p>The above process was run over the course of a couple days.  The most time consuming part was the parsing of the XML files.  We wrote <a href="http://github.com/defunkt/resque">Resque</a> workers to handle the above  so that the work could be distributed to multiple nodes running on EC2, however, I ended up running things locally so that I could test the process.  Given the pubmed database doesn&#8217;t change that often, and that we&#8217;ll rarely need to re-process the entire dataset having it run on a single machine over the course of a couple days will likely suffice.</p>
 
-<p>After importing all the articles into MongoDB we had a pretty large MongoDB database consisting of ~18 million &#8220;documents&#8221;.  With the articles loaded into MongoDB, we moved onto the next step&#8230;&#8221;analyzing all 18 million documents&#8221;:/2010/03/31/data-analysis-using-mongodb-map-reduce.html.</p>
+<p>After importing all the articles into MongoDB we had a pretty large MongoDB database consisting of ~18 million &#8220;documents&#8221;.  With the articles loaded into MongoDB, we moved onto the next step&#8230;<a href="/2010/03/31/data-analysis-using-mongodb-map-reduce.html">analyzing all 18 million documents</a>.</p>
 
 <hr />
 
@@ -510,14 +510,6 @@
 }(document, 'script', 'facebook-jssdk'));</script>
 
 
-
-  <script type="text/javascript">
-    (function() {
-      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
-      script.src = 'https://apis.google.com/js/plusone.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
-    })();
-  </script>
 
 
 

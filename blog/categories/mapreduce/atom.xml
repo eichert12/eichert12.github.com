@@ -4,7 +4,7 @@
   <title><![CDATA[Category: mapreduce | Steve Eichert]]></title>
   <link href="http://steveeichert.com/blog/categories/mapreduce/atom.xml" rel="self"/>
   <link href="http://steveeichert.com/"/>
-  <updated>2012-02-09T21:54:43-05:00</updated>
+  <updated>2012-02-09T22:09:04-05:00</updated>
   <id>http://steveeichert.com/</id>
   <author>
     <name><![CDATA[Steve Eichert]]></name>
@@ -20,9 +20,9 @@
     <id>http://steveeichert.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing</id>
     <content type="html"><![CDATA[<p>In a few previous posts I talked about a project that we're working on that involves analyzing a lot of XML documents from pubmed.  We're currently not using Hadoop to parse the raw XML, however, due to the large number of documents in pubmed and the time it takes to do the parsing we've been discussing options that would allow us to scale up the processing to happen on multiple machines.  Since we're already using Hadoop for analysis I decided to poke around a bit to see if we could figure out a way to use Hadoop for the parsing of the 617+ XML documents.</p>
 
-<p>After some digging I came across "this page":http://hadoop.apache.org/common/docs/r0.15.2/streaming.html#How+do+I+parse+XML+documents+using+streaming%3F on the Hadoop Streaming page that said the following: "You can use the record reader StreamXmlRecordReader to process XML documents....Anything found between BEGIN_STRING and END_STRING would be treated as one record for map tasks."</p>
+<p>After some digging I came across <a href="http://hadoop.apache.org/common/docs/r0.15.2/streaming.html#How+do+I+parse+XML+documents+using+streaming%3F">this page</a> on the Hadoop Streaming page that said the following: "You can use the record reader StreamXmlRecordReader to process XML documents....Anything found between BEGIN_STRING and END_STRING would be treated as one record for map tasks."</p>
 
-<p>After a few tries I wasn't having much success, so continued to look for alternate options.  I came across Paul Ingles post on "Processing XML with Hadoop":http://oobaloo.co.uk/articles/2010/1/20/processing-xml-in-hadoop.html which pointed me to the "XmlInputFormat":http://github.com/apache/mahout/blob/ad84344e4055b1e6adff5779339a33fa29e1265d/examples/src/main/java/org/apache/mahout/classifier/bayes/XmlInputFormat.java class in Mahout.  I believe in order to use the XlInputFormat class from Mahout I either need to recompile Hadoop with that class included or be using a jar file for my jobs that includes that class.  Since we're writing our mappers and reducers in Ruby I didn't have a jar to add the class to.</p>
+<p>After a few tries I wasn't having much success, so continued to look for alternate options.  I came across Paul Ingles post on <a href="http://oobaloo.co.uk/articles/2010/1/20/processing-xml-in-hadoop.html">Processing XML with Hadoop</a> which pointed me to the <a href="http://github.com/apache/mahout/blob/ad84344e4055b1e6adff5779339a33fa29e1265d/examples/src/main/java/org/apache/mahout/classifier/bayes/XmlInputFormat.java">XmlInputFormat</a> class in Mahout.  I believe in order to use the XlInputFormat class from Mahout I either need to recompile Hadoop with that class included or be using a jar file for my jobs that includes that class.  Since we're writing our mappers and reducers in Ruby I didn't have a jar to add the class to.</p>
 
 <p>In hopes that I was being stupid with the StreamXmlReaderRecord I decided to return to it and attempt to get it working.  After configuring it I saw some positive things in the console as I ran my job.  It did in fact look like Hadoop was breaking apart my XML documents into the appropriate chunks (using the start and end tags I specified in my config)</p>
 
