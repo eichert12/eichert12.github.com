@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: hadoop, | Steve Eichert]]></title>
+  <link href="http://eichert12.github.com/blog/categories/hadoop-/atom.xml" rel="self"/>
+  <link href="http://eichert12.github.com/"/>
+  <updated>2012-02-10T07:43:32-05:00</updated>
+  <id>http://eichert12.github.com/</id>
+  <author>
+    <name><![CDATA[Steve Eichert]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using Hadoop Streaming for XML processing]]></title>
+    <link href="http://eichert12.github.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing.html"/>
+    <updated>2010-04-22T00:00:00-04:00</updated>
+    <id>http://eichert12.github.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing</id>
+    <content type="html"><![CDATA[<p>In a few previous posts I talked about a project that we're working on that involves analyzing a lot of XML documents from pubmed.  We're currently not using Hadoop to parse the raw XML, however, due to the large number of documents in pubmed and the time it takes to do the parsing we've been discussing options that would allow us to scale up the processing to happen on multiple machines.  Since we're already using Hadoop for analysis I decided to poke around a bit to see if we could figure out a way to use Hadoop for the parsing of the 617+ XML documents.</p>
+
+<p>After some digging I came across <a href="http://hadoop.apache.org/common/docs/r0.15.2/streaming.html#How+do+I+parse+XML+documents+using+streaming%3F">this page</a> on the Hadoop Streaming page that said the following: "You can use the record reader StreamXmlRecordReader to process XML documents....Anything found between BEGIN_STRING and END_STRING would be treated as one record for map tasks."</p>
+
+<p>After a few tries I wasn't having much success, so continued to look for alternate options.  I came across Paul Ingles post on <a href="http://oobaloo.co.uk/articles/2010/1/20/processing-xml-in-hadoop.html">Processing XML with Hadoop</a> which pointed me to the <a href="http://github.com/apache/mahout/blob/ad84344e4055b1e6adff5779339a33fa29e1265d/examples/src/main/java/org/apache/mahout/classifier/bayes/XmlInputFormat.java">XmlInputFormat</a> class in Mahout.  I believe in order to use the XlInputFormat class from Mahout I either need to recompile Hadoop with that class included or be using a jar file for my jobs that includes that class.  Since we're writing our mappers and reducers in Ruby I didn't have a jar to add the class to.</p>
+
+<p>In hopes that I was being stupid with the StreamXmlReaderRecord I decided to return to it and attempt to get it working.  After configuring it I saw some positive things in the console as I ran my job.  It did in fact look like Hadoop was breaking apart my XML documents into the appropriate chunks (using the start and end tags I specified in my config)</p>
+
+<p><code>
+hadoop jar hadoop-0.20.2-streaming.jar
+   -input medline10n0515.xml
+   -output out
+   -mapper xml-mapper.rb
+   -inputreader "StreamXmlRecordReader,begin=&lt;MedlineCitation,end=&lt;/MedlineCitation&gt;"
+   -jobconf mapred.reduce.tasks=0
+</code></p>
+
+<p>The next thing to figure out was how I should be retrieving the entire XML contents from within my mapper.  With Hadoop Streaming the input is streamed in via STDIN so I attempted building up the XML myself using some mega-smart "parse" logic!</p>
+
+<p>``` ruby</p>
+
+<h1>!/usr/bin/env ruby</h1>
+
+<p>xml = nil
+STDIN.each_line do |line|
+  line.strip!</p>
+
+<p>  if line.include?("&lt;MedlineCitation")</p>
+
+<pre><code>xml = line
+</code></pre>
+
+<p>  else</p>
+
+<pre><code>xml += line
+</code></pre>
+
+<p>  end</p>
+
+<p>  if line.include?("</MedlineCitation>")</p>
+
+<pre><code>puts convert_to_json(xml)
+</code></pre>
+
+<p>  end
+end
+```</p>
+
+<p>As you can see I look for the start and end tags relevant for my XML, and once I have a complete document I pass the XML to the convert_to_json method.  There's definitely quite a bit of cleanup that can be done, as well as edge cases that aren't handled (nested tags that match the root tag), but we've at least co-erced Hadoop into doing what we want.  Next up is seeing how well it works when run against the entire dataset.</p>
+]]></content>
+  </entry>
+  
+</feed>
