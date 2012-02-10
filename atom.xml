@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Steve Eichert]]></title>
-  <link href="http://steve.eichert.com/atom.xml" rel="self"/>
-  <link href="http://steve.eichert.com/"/>
-  <updated>2012-02-10T08:22:12-05:00</updated>
-  <id>http://steve.eichert.com/</id>
+  <link href="http://steveeichert.com/atom.xml" rel="self"/>
+  <link href="http://steveeichert.com/"/>
+  <updated>2012-02-10T08:26:52-05:00</updated>
+  <id>http://steveeichert.com/</id>
   <author>
     <name><![CDATA[Steve Eichert]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Creating]]></title>
-    <link href="http://steve.eichert.com/blog/2012/02/10/creating/"/>
+    <link href="http://steveeichert.com/blog/2012/02/10/creating/"/>
     <updated>2012-02-10T06:29:00-05:00</updated>
-    <id>http://steve.eichert.com/blog/2012/02/10/creating</id>
+    <id>http://steveeichert.com/blog/2012/02/10/creating</id>
     <content type="html"><![CDATA[<p>Over the course of the last 3 years I&#8217;ve learned quite a bit about myself.  Three years ago I left the comfy confines of a corporate job to go out on my own.  I was lucky in that I teamed up with my pops who had already built a client base for his <a href="http://www.rivermark.biz">consulting business</a> that would be immediate clients for consulting work of my own, and as the theory went, ideal candidates for several of the software products we were looking to create.  A post about the ups and downs, all the learnings, and madness that has ensued is for another day.  Today, I&#8217;m focused on what I&#8217;ve found to be the most important aspect to my overall happiness, creating.</p>
 
 <p>With any new company there are huge resource constraints that you must work within.  I&#8217;ve felt this in a big way.  I&#8217;ve had a ton of ideas for things I&#8217;ve wanted to build, but all too often I&#8217;ve had to restrain myself from diving in so that we could continue to make enough money to sustain the business.  The tradeoffs for going big with your ideas vs. continuing to muck your way through the work that pays the bills is a difficult one.  As a developer, I like to create.  I particularly like to create new things that I&#8217;m interested in and that I think will be loved by those its aimed to serve.  Too often I&#8217;ve found myself putting off creating. I have lots of excuses.</p>
@@ -42,9 +42,9 @@
   
   <entry>
     <title type="html"><![CDATA[Using Hadoop Streaming for XML processing]]></title>
-    <link href="http://steve.eichert.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing.html"/>
+    <link href="http://steveeichert.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing.html"/>
     <updated>2010-04-22T00:00:00-04:00</updated>
-    <id>http://steve.eichert.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing</id>
+    <id>http://steveeichert.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing</id>
     <content type="html"><![CDATA[<p>In a few previous posts I talked about a project that we&#8217;re working on that involves analyzing a lot of XML documents from pubmed.  We&#8217;re currently not using Hadoop to parse the raw XML, however, due to the large number of documents in pubmed and the time it takes to do the parsing we&#8217;ve been discussing options that would allow us to scale up the processing to happen on multiple machines.  Since we&#8217;re already using Hadoop for analysis I decided to poke around a bit to see if we could figure out a way to use Hadoop for the parsing of the 617+ XML documents.</p>
 
 <p>After some digging I came across <a href="http://hadoop.apache.org/common/docs/r0.15.2/streaming.html#How+do+I+parse+XML+documents+using+streaming%3F">this page</a> on the Hadoop Streaming page that said the following: &#8220;You can use the record reader StreamXmlRecordReader to process XML documents&#8230;.Anything found between BEGIN_STRING and END_STRING would be treated as one record for map tasks.&#8221;</p>
@@ -108,10 +108,10 @@
   
   <entry>
     <title type="html"><![CDATA[Attempts at Analyzing 19 million documents using MongoDB map/reduce]]></title>
-    <link href="http://steve.eichert.com/2010/03/31/data-analysis-using-mongodb-map-reduce.html"/>
+    <link href="http://steveeichert.com/2010/03/31/data-analysis-using-mongodb-map-reduce.html"/>
     <updated>2010-03-31T00:00:00-04:00</updated>
-    <id>http://steve.eichert.com/2010/03/31/data-analysis-using-mongodb-map-reduce</id>
-    <content type="html"><![CDATA[<p>Over the course of the last couple weeks we&#8217;ve been developing a system to help analyze the 19+ million documents in the pubmed database.  In my <a href="http://steve.eichert.com/2010/03/18/large-scale-data-processing-with-mongodb.html">previous post</a> I shared details about the process that we&#8217;ve been using to bring down the ~617 zipped XML documents that contain the articles and import them into MongoDB.  Today I&#8217;m going to share a few more details about our attempts at analyzing the pubmed database using the Map/Reduce capabilities MongoDB offers.</p>
+    <id>http://steveeichert.com/2010/03/31/data-analysis-using-mongodb-map-reduce</id>
+    <content type="html"><![CDATA[<p>Over the course of the last couple weeks we&#8217;ve been developing a system to help analyze the 19+ million documents in the pubmed database.  In my <a href="http://steveeichert.com/2010/03/18/large-scale-data-processing-with-mongodb.html">previous post</a> I shared details about the process that we&#8217;ve been using to bring down the ~617 zipped XML documents that contain the articles and import them into MongoDB.  Today I&#8217;m going to share a few more details about our attempts at analyzing the pubmed database using the Map/Reduce capabilities MongoDB offers.</p>
 
 <p>After completing the download, unzip, parse, and load steps required to get the pubmed articles into our MongoDB instance we set out to use the map/reduce capabilities in MongoDB to do analysis and aggregation.  Our initial work has focused on the keywords and MESH headings within pubmed articles, as well as on the relationships between authors within pubmed.  Our end goal is to have a profile for every author who has published an article in pubmed with details about what keywords and MESH headings appear most within the articles they publish, as well as who they commonly co-author articles with.</p>
 
@@ -207,9 +207,9 @@
   
   <entry>
     <title type="html"><![CDATA[Large Scale Data Processing with MongoDB Map/Reduce (Part 1:Background)]]></title>
-    <link href="http://steve.eichert.com/2010/03/18/large-scale-data-processing-with-mongodb.html"/>
+    <link href="http://steveeichert.com/2010/03/18/large-scale-data-processing-with-mongodb.html"/>
     <updated>2010-03-18T00:00:00-04:00</updated>
-    <id>http://steve.eichert.com/2010/03/18/large-scale-data-processing-with-mongodb</id>
+    <id>http://steveeichert.com/2010/03/18/large-scale-data-processing-with-mongodb</id>
     <content type="html"><![CDATA[<p>Over the course of the last week I&#8217;ve been working with a member of our team to develop a prototype data processing &#8220;engine&#8221; for analyzing articles within the <a href="http://www.ncbi.nlm.nih.gov/pubmed">pubmed database</a>.  The pubmed database consists of approximately 19 million articles that can be downloaded as approximately 617 zipped XML documents.</p>
 
 <p>Our initial work has focused on downloading the complete dataset, pulling out the bits that we have interest in, and importing them into MongoDB.  For our initial analysis we&#8217;re focusing on a subset of the details available for each article.  In the future we&#8217;ll likely expand our analysis to include more details.</p>
@@ -220,7 +220,7 @@
 
 <p>The above process was run over the course of a couple days.  The most time consuming part was the parsing of the XML files.  We wrote <a href="http://github.com/defunkt/resque">Resque</a> workers to handle the above  so that the work could be distributed to multiple nodes running on EC2, however, I ended up running things locally so that I could test the process.  Given the pubmed database doesn&#8217;t change that often, and that we&#8217;ll rarely need to re-process the entire dataset having it run on a single machine over the course of a couple days will likely suffice.</p>
 
-<p>After importing all the articles into MongoDB we had a pretty large MongoDB database consisting of ~18 million &#8220;documents&#8221;.  With the articles loaded into MongoDB, we moved onto the next step&#8230;<a href="http://steve.eichert.com/2010/03/31/data-analysis-using-mongodb-map-reduce.html">analyzing all 18 million documents</a>.</p>
+<p>After importing all the articles into MongoDB we had a pretty large MongoDB database consisting of ~18 million &#8220;documents&#8221;.  With the articles loaded into MongoDB, we moved onto the next step&#8230;<a href="http://steveeichert.com/2010/03/31/data-analysis-using-mongodb-map-reduce.html">analyzing all 18 million documents</a>.</p>
 
 <hr />
 
@@ -231,9 +231,9 @@
   
   <entry>
     <title type="html"><![CDATA[Network Visualization on the Web]]></title>
-    <link href="http://steve.eichert.com/2009/01/30/network-visualization-on-the-web.html"/>
+    <link href="http://steveeichert.com/2009/01/30/network-visualization-on-the-web.html"/>
     <updated>2009-01-30T00:00:00-05:00</updated>
-    <id>http://steve.eichert.com/2009/01/30/network-visualization-on-the-web</id>
+    <id>http://steveeichert.com/2009/01/30/network-visualization-on-the-web</id>
     <content type="html"><![CDATA[<p>Over the course of the last couple months I&#8217;ve been doing quite a bit of investigation and experimentation of existing network visualization libraries.  There are a number of libraries available, some open source, some built specifically for the web, others meant for a desktop environment, some in java, others in flash, and round and round we go.</p>
 
 <p>I&#8217;ve talked to quite a few people who have specific expertise in technologies for doing network visualization as well, ranging from flash to javascript to Silverlight to java.  My conclusion thus far is that large scale network visualizations (300+ nodes) is hard.  Once you cross the 100 node mark, you begin to have serious problems with laying out the network in a way that is usable by the user of the system that the visualization is within.  Drop on top of that the desire to make the visualization interactive (zoom, click, drag, etc), as well as the desire to have the visualization software figure out the best layout for the network itself and you have a pretty difficult problem to solve.</p>
@@ -246,9 +246,9 @@
   
   <entry>
     <title type="html"><![CDATA[Moving Gems from one version of Ruby Enterprise Edition to Another]]></title>
-    <link href="http://steve.eichert.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another.html"/>
+    <link href="http://steveeichert.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another.html"/>
     <updated>2008-12-28T00:00:00-05:00</updated>
-    <id>http://steve.eichert.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another</id>
+    <id>http://steveeichert.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another</id>
     <content type="html"><![CDATA[<p>As mentioned in my previous post I recently built a small internal micro app with merb.  As part of the process of deploying that app I needed/wanted to update to the latest version of Ruby Enterprise Edition (REE) and Passenger on my slice.  One of the issues I ran into while trying to update the REE version is that all my old gems where not installed in my fresh new version of REE.  There may be a better way to accomplish this task, but the approach I ended up using was to modify this capistrano file (<a href="http://github.com/jtimberman/ree-capfile/tree/master">http://github.com/jtimberman/ree-capfile/tree/master</a>) to install the gems in the old version of REE in the new version.</p>
 
 <script src="http://gist.github.com/39066.js"></script>
