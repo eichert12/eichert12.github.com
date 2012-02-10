@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Steve Eichert]]></title>
-  <link href="http://eichert12.github.com/atom.xml" rel="self"/>
-  <link href="http://eichert12.github.com/"/>
-  <updated>2012-02-09T21:36:47-05:00</updated>
-  <id>http://eichert12.github.com/</id>
+  <link href="http://steveeichert.com/atom.xml" rel="self"/>
+  <link href="http://steveeichert.com/"/>
+  <updated>2012-02-09T21:40:16-05:00</updated>
+  <id>http://steveeichert.com/</id>
   <author>
     <name><![CDATA[Steve Eichert]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Using Hadoop Streaming for XML processing]]></title>
-    <link href="http://eichert12.github.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing.html"/>
+    <link href="http://steveeichert.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing.html"/>
     <updated>2010-04-22T00:00:00-04:00</updated>
-    <id>http://eichert12.github.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing</id>
+    <id>http://steveeichert.com/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing</id>
     <content type="html"><![CDATA[<p>In a few previous posts I talked about a project that we&#8217;re working on that involves analyzing a lot of <span class="caps">XML</span> documents from pubmed.  We&#8217;re currently not using Hadoop to parse the raw <span class="caps">XML</span>, however, due to the large number of documents in pubmed and the time it takes to do the parsing we&#8217;ve been discussing options that would allow us to scale up the processing to happen on multiple machines.  Since we&#8217;re already using Hadoop for analysis I decided to poke around a bit to see if we could figure out a way to use Hadoop for the parsing of the 617+ <span class="caps">XML</span> documents.</p>
 <p>After some digging I came across <a href="http://hadoop.apache.org/common/docs/r0.15.2/streaming.html#How+do+I+parse+XML+documents+using+streaming%3F">this page</a> on the Hadoop Streaming page that said the following: &#8220;You can use the record reader StreamXmlRecordReader to process <span class="caps">XML</span> documents&#8230;.Anything found between BEGIN_STRING and END_STRING would be treated as one record for map tasks.&#8221;</p>
 <p>After a few tries I wasn&#8217;t having much success, so continued to look for alternate options.  I came across Paul Ingles post on <a href="http://oobaloo.co.uk/articles/2010/1/20/processing-xml-in-hadoop.html">Processing <span class="caps">XML</span> with Hadoop</a> which pointed me to the <a href="http://github.com/apache/mahout/blob/ad84344e4055b1e6adff5779339a33fa29e1265d/examples/src/main/java/org/apache/mahout/classifier/bayes/XmlInputFormat.java">XmlInputFormat</a> class in Mahout.  I believe in order to use the XlInputFormat class from Mahout I either need to recompile Hadoop with that class included or be using a jar file for my jobs that includes that class.  Since we&#8217;re writing our mappers and reducers in Ruby I didn&#8217;t have a jar to add the class to.</p>
@@ -72,10 +72,10 @@
   
   <entry>
     <title type="html"><![CDATA[Attempts at Analyzing 19 million documents using MongoDB map/reduce]]></title>
-    <link href="http://eichert12.github.com/2010/03/31/data-analysis-using-mongodb-map-reduce.html"/>
+    <link href="http://steveeichert.com/2010/03/31/data-analysis-using-mongodb-map-reduce.html"/>
     <updated>2010-03-31T00:00:00-04:00</updated>
-    <id>http://eichert12.github.com/2010/03/31/data-analysis-using-mongodb-map-reduce</id>
-    <content type="html"><![CDATA[<p>Over the course of the last couple weeks we&#8217;ve been developing a system to help analyze the 19+ million documents in the pubmed database.  In my <a href="http://eichert12.github.com/2010/03/18/large-scale-data-processing-with-mongodb.html">previous post</a> I shared details about the process that we&#8217;ve been using to bring down the ~617 zipped <span class="caps">XML</span> documents that contain the articles and import them into MongoDB.  Today I&#8217;m going to share a few more details about our attempts at analyzing the pubmed database using the Map/Reduce capabilities MongoDB offers.</p>
+    <id>http://steveeichert.com/2010/03/31/data-analysis-using-mongodb-map-reduce</id>
+    <content type="html"><![CDATA[<p>Over the course of the last couple weeks we&#8217;ve been developing a system to help analyze the 19+ million documents in the pubmed database.  In my <a href="http://steveeichert.com/2010/03/18/large-scale-data-processing-with-mongodb.html">previous post</a> I shared details about the process that we&#8217;ve been using to bring down the ~617 zipped <span class="caps">XML</span> documents that contain the articles and import them into MongoDB.  Today I&#8217;m going to share a few more details about our attempts at analyzing the pubmed database using the Map/Reduce capabilities MongoDB offers.</p>
 <p>After completing the download, unzip, parse, and load steps required to get the pubmed articles into our MongoDB instance we set out to use the map/reduce capabilities in MongoDB to do analysis and aggregation.  Our initial work has focused on the keywords and <span class="caps">MESH</span> headings within pubmed articles, as well as on the relationships between authors within pubmed.  Our end goal is to have a profile for every author who has published an article in pubmed with details about what keywords and <span class="caps">MESH</span> headings appear most within the articles they publish, as well as who they commonly co-author articles with.</p>
 <p>In order to build this profile we set out to write a map/reduce job to count the number of articles written by each author by keyword.  Our job writes the results of the map/reduce job to a named collection.</p>
 <div class='bogus-wrapper'><figure class='code'><figcaption><span><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span><br />
@@ -148,15 +148,15 @@ coauthor3_: 122
   
   <entry>
     <title type="html"><![CDATA[Large Scale Data Processing with MongoDB Map/Reduce (Part 1:Background)]]></title>
-    <link href="http://eichert12.github.com/2010/03/18/large-scale-data-processing-with-mongodb.html"/>
+    <link href="http://steveeichert.com/2010/03/18/large-scale-data-processing-with-mongodb.html"/>
     <updated>2010-03-18T00:00:00-04:00</updated>
-    <id>http://eichert12.github.com/2010/03/18/large-scale-data-processing-with-mongodb</id>
+    <id>http://steveeichert.com/2010/03/18/large-scale-data-processing-with-mongodb</id>
     <content type="html"><![CDATA[<p>Over the course of the last week I&#8217;ve been working with a member of our team to develop a prototype data processing &#8220;engine&#8221; for analyzing articles within the <a href="http://www.ncbi.nlm.nih.gov/pubmed">pubmed database</a>.  The pubmed database consists of approximately 19 million articles that can be downloaded as approximately 617 zipped <span class="caps">XML</span> documents.</p>
 <p>Our initial work has focused on downloading the complete dataset, pulling out the bits that we have interest in, and importing them into MongoDB.  For our initial analysis we&#8217;re focusing on a subset of the details available for each article.  In the future we&#8217;ll likely expand our analysis to include more details.</p>
 <p>We started by downloading the 617 zipped <span class="caps">XML</span> documents from pubmed.  Once downloaded we unzipped each file, parsed out the bits that we&#8217;re interested in and saved the details in a <span class="caps">JSON</span> file optimized for importing into MongoDB. <sup class="footnote" id="fnr1"><a href="#fn1">1</a></sup></p>
 <p>Once all the <span class="caps">XML</span> files were processed and the details were saved out to a <span class="caps">JSON</span> file, we used the mongoimport utility to import the <span class="caps">JSON</span> files into MongoDB.</p>
 <p>The above process was run over the course of a couple days.  The most time consuming part was the parsing of the <span class="caps">XML</span> files.  We wrote <a href="http://github.com/defunkt/resque">Resque</a> workers to handle the above  so that the work could be distributed to multiple nodes running on EC2, however, I ended up running things locally so that I could test the process.  Given the pubmed database doesn&#8217;t change that often, and that we&#8217;ll rarely need to re-process the entire dataset having it run on a single machine over the course of a couple days will likely suffice.</p>
-<p>After importing all the articles into MongoDB we had a pretty large MongoDB database consisting of ~18 million &#8220;documents&#8221;.  With the articles loaded into MongoDB, we moved onto the next step&#8230;<a href="http://eichert12.github.com/2010/03/31/data-analysis-using-mongodb-map-reduce.html">analyzing all 18 million documents</a>.</p>
+<p>After importing all the articles into MongoDB we had a pretty large MongoDB database consisting of ~18 million &#8220;documents&#8221;.  With the articles loaded into MongoDB, we moved onto the next step&#8230;<a href="http://steveeichert.com/2010/03/31/data-analysis-using-mongodb-map-reduce.html">analyzing all 18 million documents</a>.</p>
 <hr />
 <p><sup class="footnote" id="fnr1"><a href="#fn1">1</a></sup> MongoDB likes a single <span class="caps">JSON</span> record on each line.<br />
 <sup class="footnote" id="fnr2"><a href="#fn2">2</a></sup> This is my first blog post in ages, I need to get back into it slowly, oh so very slowly! :-)</p>]]></content>
@@ -164,9 +164,9 @@ coauthor3_: 122
   
   <entry>
     <title type="html"><![CDATA[Network Visualization on the Web]]></title>
-    <link href="http://eichert12.github.com/2009/01/30/network-visualization-on-the-web.html"/>
+    <link href="http://steveeichert.com/2009/01/30/network-visualization-on-the-web.html"/>
     <updated>2009-01-30T00:00:00-05:00</updated>
-    <id>http://eichert12.github.com/2009/01/30/network-visualization-on-the-web</id>
+    <id>http://steveeichert.com/2009/01/30/network-visualization-on-the-web</id>
     <content type="html"><![CDATA[<p>Over the course of the last couple months I&#8217;ve been doing quite a bit of investigation and experimentation of existing network visualization libraries.  There are a number of libraries available, some open source, some built specifically for the web, others meant for a desktop environment, some in java, others in flash, and round and round we go.</p>
 <p>I&#8217;ve talked to quite a few people who have specific expertise in technologies for doing network visualization as well, ranging from flash to javascript to Silverlight to java.  My conclusion thus far is that large scale network visualizations (300+ nodes) is hard.  Once you cross the 100 node mark, you begin to have serious problems with laying out the network in a way that is usable by the user of the system that the visualization is within.  Drop on top of that the desire to make the visualization interactive (zoom, click, drag, etc), as well as the desire to have the visualization software figure out the best layout for the network itself and you have a pretty difficult problem to solve.</p>
 <p>I&#8217;m currently doing some prototypes myself using Silverlight.  I don&#8217;t love the idea of using Silverlight since I doubt the penetration of Silverlight is as great as some have proclaimed, but, the advantages it offers are hard to look past.  As a long time .<span class="caps">NET</span>/C# developer I&#8217;m very comfortable with the development tools used to build Silverlight applications, as well as the language within which to do so, C#.  Silverlight appears to offer some pretty decent performance, and I suspect that it will get better as the  VM improves.  The major disadvantage of Silverlight, which I don&#8217;t know the validity of, is it&#8217;s lack of existing user base.  Since it&#8217;s relatively new, and not many sites use it, I suspect the installed base of Silverlight is much less then something like Flash.</p>
@@ -175,9 +175,9 @@ coauthor3_: 122
   
   <entry>
     <title type="html"><![CDATA[Moving Gems from one version of Ruby Enterprise Edition to Another]]></title>
-    <link href="http://eichert12.github.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another.html"/>
+    <link href="http://steveeichert.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another.html"/>
     <updated>2008-12-28T00:00:00-05:00</updated>
-    <id>http://eichert12.github.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another</id>
+    <id>http://steveeichert.com/2008/12/28/moving-gems-from-one-version-of-ree-to-another</id>
     <content type="html"><![CDATA[<p>As mentioned in my previous post I recently built a small internal micro app with merb.  As part of the process of deploying that app I needed/wanted to update to the latest version of Ruby Enterprise Edition (<span class="caps">REE</span>) and Passenger on my slice.  One of the issues I ran into while trying to update the <span class="caps">REE</span> version is that all my old gems where not installed in my fresh new version of <span class="caps">REE</span>.  There may be a better way to accomplish this task, but the approach I ended up using was to modify this capistrano file (<a href="http://github.com/jtimberman/ree-capfile/tree/master">http://github.com/jtimberman/ree-capfile/tree/master</a>) to install the gems in the old version of <span class="caps">REE</span> in the new version.</p>
 <script src="http://gist.github.com/39066.js"></script>]]></content>
   </entry>
