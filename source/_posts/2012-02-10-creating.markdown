@@ -1,0 +1,26 @@
+---
+layout: post
+title: "Creating"
+date: 2012-02-10 06:29
+comments: true
+categories: 
+---
+
+Over the course of the last 3 years I've learned quite a bit about myself.  Three years ago I left the comfy confines of a corporate job to go out on my own.  I was lucky in that I teamed up with my pops who had already built a client base for his [consulting business](http://www.rivermark.biz) that would be immediate clients for consulting work of my own, and as the theory went, ideal candidates for several of the software products we were looking to create.  A post about the ups and downs, all the learnings, and madness that has ensued is for another day.  Today, I'm focused on what I've found to be the most important aspect to my overall happiness, creating.
+
+With any new company there are huge resource constraints that you must work within.  I've felt this in a big way.  I've had a ton of ideas for things I've wanted to build, but all too often I've had to restrain myself from diving in so that we could continue to make enough money to sustain the business.  The tradeoffs for going big with your ideas vs. continuing to muck your way through the work that pays the bills is a difficult one.  As a developer, I like to create.  I particularly like to create new things that I'm interested in and that I think will be loved by those its aimed to serve.  Too often I've found myself putting off creating. I have lots of excuses.
+
+* We need to pay the bills
+* A client is waiting for that all important deliverable
+* blah
+* blah, blah, blah
+  
+The all suck.
+  
+Over the last year, I've felt the ill effects of not creating.  My motivation evaporated.  I didn't want to go to work.  I stopped thinking of new ideas.  Why bother when they weren't being made real.
+
+No matter what I do, I'm still going to have things I need to do that will prevent me from creating.  The good news for me, is I have the ability to put aside all of those things and go and create.  I'm starting small, trying to pick a few features that I've wanted to add to one of our software products and getting them implemented this week.  My goal is to continue that tradition every day by finding at least 1 small thing to add, improve, or tweak for the better.
+
+I'm getting back into the habit of creating.  This blog post is proof.
+
+

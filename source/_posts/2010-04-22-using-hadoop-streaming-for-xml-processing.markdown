@@ -1,0 +1,47 @@
+---
+layout: post
+title: Using Hadoop Streaming for XML processing
+published: true
+permalink: /hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing.html
+categories: hadoop, mapreduce
+comments: yes
+---
+
+In a few previous posts I talked about a project that we're working on that involves analyzing a lot of XML documents from pubmed.  We're currently not using Hadoop to parse the raw XML, however, due to the large number of documents in pubmed and the time it takes to do the parsing we've been discussing options that would allow us to scale up the processing to happen on multiple machines.  Since we're already using Hadoop for analysis I decided to poke around a bit to see if we could figure out a way to use Hadoop for the parsing of the 617+ XML documents.
+
+After some digging I came across [this page](http://hadoop.apache.org/common/docs/r0.15.2/streaming.html#How+do+I+parse+XML+documents+using+streaming%3F) on the Hadoop Streaming page that said the following: "You can use the record reader StreamXmlRecordReader to process XML documents....Anything found between BEGIN_STRING and END_STRING would be treated as one record for map tasks."
+
+After a few tries I wasn't having much success, so continued to look for alternate options.  I came across Paul Ingles post on [Processing XML with Hadoop](http://oobaloo.co.uk/articles/2010/1/20/processing-xml-in-hadoop.html) which pointed me to the [XmlInputFormat](http://github.com/apache/mahout/blob/ad84344e4055b1e6adff5779339a33fa29e1265d/examples/src/main/java/org/apache/mahout/classifier/bayes/XmlInputFormat.java) class in Mahout.  I believe in order to use the XlInputFormat class from Mahout I either need to recompile Hadoop with that class included or be using a jar file for my jobs that includes that class.  Since we're writing our mappers and reducers in Ruby I didn't have a jar to add the class to.  
+
+In hopes that I was being stupid with the StreamXmlReaderRecord I decided to return to it and attempt to get it working.  After configuring it I saw some positive things in the console as I ran my job.  It did in fact look like Hadoop was breaking apart my XML documents into the appropriate chunks (using the start and end tags I specified in my config)
+
+```
+hadoop jar hadoop-0.20.2-streaming.jar 
+   -input medline10n0515.xml 
+   -output out 
+   -mapper xml-mapper.rb 
+   -inputreader "StreamXmlRecordReader,begin=<MedlineCitation,end=</MedlineCitation>" 
+   -jobconf mapred.reduce.tasks=0
+```
+
+The next thing to figure out was how I should be retrieving the entire XML contents from within my mapper.  With Hadoop Streaming the input is streamed in via STDIN so I attempted building up the XML myself using some mega-smart "parse" logic!
+
+``` ruby
+#!/usr/bin/env ruby
+xml = nil
+STDIN.each_line do |line|
+  line.strip!
+  
+  if line.include?("<MedlineCitation")
+    xml = line
+  else
+    xml += line
+  end
+
+  if line.include?("</MedlineCitation>")
+    puts convert_to_json(xml)
+  end
+end
+```
+
+As you can see I look for the start and end tags relevant for my XML, and once I have a complete document I pass the XML to the convert_to_json method.  There's definitely quite a bit of cleanup that can be done, as well as edge cases that aren't handled (nested tags that match the root tag), but we've at least co-erced Hadoop into doing what we want.  Next up is seeing how well it works when run against the entire dataset.

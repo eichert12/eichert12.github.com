@@ -1,0 +1,14 @@
+---
+layout: post
+title: Network Visualization on the Web
+permalink: /2009/01/30/network-visualization-on-the-web.html
+comments: yes
+---
+
+Over the course of the last couple months I've been doing quite a bit of investigation and experimentation of existing network visualization libraries.  There are a number of libraries available, some open source, some built specifically for the web, others meant for a desktop environment, some in java, others in flash, and round and round we go.
+
+I've talked to quite a few people who have specific expertise in technologies for doing network visualization as well, ranging from flash to javascript to Silverlight to java.  My conclusion thus far is that large scale network visualizations (300+ nodes) is hard.  Once you cross the 100 node mark, you begin to have serious problems with laying out the network in a way that is usable by the user of the system that the visualization is within.  Drop on top of that the desire to make the visualization interactive (zoom, click, drag, etc), as well as the desire to have the visualization software figure out the best layout for the network itself and you have a pretty difficult problem to solve.  
+
+I'm currently doing some prototypes myself using Silverlight.  I don't love the idea of using Silverlight since I doubt the penetration of Silverlight is as great as some have proclaimed, but, the advantages it offers are hard to look past.  As a long time .NET/C# developer I'm very comfortable with the development tools used to build Silverlight applications, as well as the language within which to do so, C#.  Silverlight appears to offer some pretty decent performance, and I suspect that it will get better as the  VM improves.  The major disadvantage of Silverlight, which I don't know the validity of, is it's lack of existing user base.  Since it's relatively new, and not many sites use it, I suspect the installed base of Silverlight is much less then something like Flash.
+
+The other piece of software that I've been spending a bit of time with is graphvis.  Graphvis is good at creating network visualizations, and supports a number of different layout algorithms.  Unfortunately the output isn't always great, and it most certainly isn't very interactive.  What I'm experimenting with is using graphvis to pre-compute the network layout, and then feeding that positional information into the Silverlight visualization.  The primary advantage will be that the Silverlight app won't have to figure out the initial layout, however, it will be able to handle all the nice visualization and interactivity that's desired.  The question still remains, is Silverlight up to the challenge?  Or is flash, processing, or a pure java applet more appropriate/capable?  Only time will tell....
