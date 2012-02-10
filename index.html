@@ -9,11 +9,7 @@
   <meta name="author" content="Steve Eichert">
 
   
-  <meta name="description" content="1
-2
-3
-def hello? return &quot;Hi!&quot;
-end ">
+  <meta name="description" content="In a few previous posts I talked about a project that we&#8217;re working on that involves analyzing a lot of XML documents from pubmed. We&#8217;re &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -68,49 +64,6 @@ end ">
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/09/test/">Test</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-09T21:49:00-05:00" pubdate data-updated="true">Feb 9<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="k">def</span> <span class="nf">hello?</span>
-</span><span class='line'>  <span class="k">return</span> <span class="s2">&quot;Hi!&quot;</span>
-</span><span class='line'><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -293,27 +246,30 @@ end ">
 
 <p>We evaluated other map/reduce strategies that would reduce the document size, however, the limitations that MongoDB places on the mappers and reducers prevented us from implementing those alternate strategies.  To be more specific, MongoDB requires the mapper and reducer to emit the same structure.  From the map phase we were emitting:</p>
 
-<div>
-  <pre>
-    <code class='ruby'>author, {coauthor1: 1} #emit for each author/co-author &quot;pair&quot;</code>
-  </pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'>  <span class="n">author</span><span class="p">,</span> <span class="p">{</span><span class="n">coauthor1</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span> <span class="c1">#emit for each author/co-author &quot;pair&quot;</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>And in our reduce phase we were consolidating all the co-author counts into a single hash to end up with:</p>
 
-<div>
-  <pre>
-    <code class='ruby'>{ 
-  _id: author_name, 
-  value: { 
-    coauthor1: 31, 
-    coauthor2: 211, 
-    coauthor3_: 122
-  }
-}</code>
-  </pre>
-</div>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="p">{</span>
+</span><span class='line'>  <span class="n">_id</span><span class="p">:</span> <span class="n">author_name</span><span class="p">,</span>
+</span><span class='line'>  <span class="n">value</span><span class="p">:</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">coauthor1</span><span class="p">:</span> <span class="mi">31</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">coauthor2</span><span class="p">:</span> <span class="mi">211</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">coauthor3_</span><span class="p">:</span> <span class="mi">122</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>We found that some authors had so many papers and thus so many coauthors that we were blowing past the size limitations MongoDB places on documents. An alternate strategy that we considered was changing our reduce stage to output a single author coauthor relationship with a count rather then our initial approach which reduced to an author with a hash containing all the coauthors with the counts.  However, since we can only reduce to a single output we would need to change our mapper to emit the author/co-author as the key.  Our initial attempts with this approach weren&#8217;t working well which prompted us to taken another step back to consider alternate approaches.</p>
@@ -473,10 +429,6 @@ end ">
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2012/02/09/test/">Test</a>
-      </li>
-    
-      <li class="post">
         <a href="/hadoop,/mapreduce/2010/04/22/using-hadoop-streaming-for-xml-processing.html">Using Hadoop Streaming for XML processing</a>
       </li>
     
@@ -490,6 +442,10 @@ end ">
     
       <li class="post">
         <a href="/2009/01/30/network-visualization-on-the-web.html">Network Visualization on the Web</a>
+      </li>
+    
+      <li class="post">
+        <a href="/2008/12/28/moving-gems-from-one-version-of-ree-to-another.html">Moving Gems from one version of Ruby Enterprise Edition to Another</a>
       </li>
     
   </ul>
