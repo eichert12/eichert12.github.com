@@ -4,7 +4,7 @@
   <title><![CDATA[Steve Eichert]]></title>
   <link href="http://steveeichert.com/atom.xml" rel="self"/>
   <link href="http://steveeichert.com/"/>
-  <updated>2012-02-10T08:26:52-05:00</updated>
+  <updated>2012-02-12T08:30:40-05:00</updated>
   <id>http://steveeichert.com/</id>
   <author>
     <name><![CDATA[Steve Eichert]]></name>
@@ -12,6 +12,25 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Consumption Kills]]></title>
+    <link href="http://steveeichert.com/blog/2012/02/12/consumption/"/>
+    <updated>2012-02-12T08:08:00-05:00</updated>
+    <id>http://steveeichert.com/blog/2012/02/12/consumption</id>
+    <content type="html"><![CDATA[<p>Earlier this week I talked about my need to create.  I&#8217;ve found that consumption is my biggest barrier to creating.</p>
+
+<p>In today&#8217;s world we have endless distractions.  Twitter, Facebook, Email, RSS, IM, HackerNews, and on and on.  I could fill my entire day by opening up a browser tab to each of the above and refreshing&#8230;over&#8230;and over&#8230;and over.  I&#8217;d find lots of interesting articles, videos, and updates from smart people.  All of which would distract me from creating.</p>
+
+<p>Over the last year I&#8217;ve noticed that my level of consumption has increased.  I&#8217;d like to blame Twitter, or perhaps the people I follow for <em>creating</em> so much interesting content, but there&#8217;s really no one to blame but myself.  I&#8217;ve let myself lose discipline and focus at the times when its most important.  While waiting for a console to start up, a script to run, or a page to load I&#8217;m drawn to my email, twitter, facebook, and countless other sites that do nothing but distract from what I should be focused on.  All the sudden, rather then thinking about the problem I&#8217;m working on I&#8217;m thinking about some article, or email, or other unimportant thing that I&#8217;ve come across.</p>
+
+<p>In my prior life I worked in an environment that helped prevent distractions during times of focus through pair programming.  Having someone sitting next to you is a solid way to prevent distractions.  The key to preventing distraction is discipline.  A pair forces that discipline through peer pressure.  However, discipline doesn&#8217;t need to come via a peer, leading a life of discipline can be a choice you make for yourself.</p>
+
+<p>As I reflect on the past year I clearly see that I&#8217;ve be undisciplined, unfocused, and as a result haven&#8217;t produced or created to the degree that I&#8217;ve come to expect from myself.</p>
+
+<p>My re-newed commitment to creating starts with a re-newed commitment to discipline.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Creating]]></title>
